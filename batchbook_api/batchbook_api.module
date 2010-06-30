@@ -1,0 +1,81 @@
+<?php
+// $Id:$
+
+/**
+ * @file
+ * Defines an API that enables modules to interact with Batchbook.
+ * 
+ */
+
+// Define directory paths for the Batchbook Client Service.
+define('BATCHBOOK_DIR', drupal_get_path('module', 'batchbook_api'));
+define('BATCHBOOK_DIR_CLIENT', BATCHBOOK_DIR .'/client/library/Batchblue/Service/Batchbook');
+
+// Define reporting levels for watchdog messages.
+define('BATCHBOOK_LOG_NONE', 0);
+define('BATCHBOOK_LOG_SOME', 5);
+define('BATCHBOOK_LOG_ALL', 10);
+
+// Define Batchbook classes
+define('BATCHBOOK_CLASS_PERSON', BATCHBOOK_DIR_CLIENT . '/Person.php');
+
+// Define Batchbook services
+define('BATCHBOOK_SERVICE_PERSON', BATCHBOOK_DIR_CLIENT . '/PersonService.php');
+
+// Define Drupal paths for various parts of the Batchbook UI.
+define('BATCHBOOK_PATH_ADMIN', 'admin/settings/batchbook');
+define('BATCHBOOK_PATH_DEMO', BATCHBOOK_PATH_ADMIN . '/demo');
+
+/**
+ * Implementation of hook_menu().
+ */
+function batchbook_api_menu() {
+  $items[BATCHBOOK_PATH_ADMIN] = array(
+    'title' => 'Batchbook',
+    'description' => 'Administer settings related to your Batchbook integration.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('batchbook_api_settings_form'),
+    'access arguments' => array('administer batchbook'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'batchbook_api.admin.inc',
+  );
+  $items[BATCHBOOK_PATH_ADMIN .'/settings'] = array(
+    'title' => 'Settings',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+  /*
+  $items[BATCHBOOK_PATH_DEMO] = array(
+    'title' => 'Test/Demo',
+    'page callback' => 'batchbook_api_demo',
+    'access arguments' => array('administer batchbook'),
+    'type' => MENU_LOCAL_TASK,
+    'file' => 'batchbook_api.admin.inc',
+  );
+  */
+  return $items;
+}
+
+function batchbook_api_person($id = NULL) {
+  require_once(BATCHBOOK_CLASS_PERSON);
+  $bb_person = new Batchblue_Service_BatchBook_Person($id);
+  if (!is_object($bb_person)) {
+    watchdog(BATCHBOOK_LOG_SOME, 'Creation of Batchbook person failed. Failed to create Batchblue_Service_BatchBook_Person object.', WATCHDOG_ERROR);
+    return FALSE;
+  }
+  return $bb_person;
+}
+
+function batchbook_api_person_service($account_name = NULL, $token = NULL) {
+  require_once(BATCHBOOK_SERVICE_PERSON);
+
+  $account_name = $account_name ? $account_name : variable_get('batchbook_api_account_name', '');
+  $token = $token ? $token : variable_get('batchbook_api_token', '');
+
+  $bb_person_service = new Batchblue_Service_BatchBook_PersonService($account_name, $token);
+  if (!is_object($bb_person_service)) {
+    watchdog(BATCHBOOK_LOG_SOME, 'Creation of Batchbook person service failed. Failed to create Batchblue_Service_BatchBook_PersonService object.', WATCHDOG_ERROR);
+    return FALSE;
+  }
+  return $bb_person_service;
+}
