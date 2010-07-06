@@ -29,7 +29,7 @@ module [3].
 3: http://drupal.org/project/salesforce
 
 Maintained by:
-* Shaw Price (langworthy - http://drupal.org/user/25556)
+* Shawn Price (langworthy - http://drupal.org/user/25556)
 * Boris Mann (http://drupal.org/user/4426)
 
 Sponsored by:
