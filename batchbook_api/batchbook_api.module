@@ -27,6 +27,13 @@ define('BATCHBOOK_PATH_ADMIN', 'admin/settings/batchbook');
 define('BATCHBOOK_PATH_DEMO', BATCHBOOK_PATH_ADMIN . '/demo');
 
 /**
+ * Implementation of hook_perm().
+ */
+function batchbook_api_perm() {
+  return array('administer batchbook');
+}
+
+/**
  * Implementation of hook_menu().
  */
 function batchbook_api_menu() {
