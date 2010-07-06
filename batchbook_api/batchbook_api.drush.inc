@@ -26,7 +26,7 @@ function batchbook_api_drush_command() {
 
   // the key in the $items array is the name of the command.
   //$items['solr-phpclient'] = array(
-  $items['batchbook-api'] = array(
+  $items['batchbook-client'] = array(
     //'callback' => 'apachesolr_drush_solr_phpclient',
     'callback' => 'batchbook_api_drush_batchbook_api',
     'description' => dt('Downloads the required Batchbook PHP API from github.com/batchblue.'),
@@ -51,7 +51,7 @@ function batchbook_api_drush_command() {
  */
 function batchbook_api_drush_help($section) {
   switch ($section) {
-    case 'drush:batchbook-api':
+    case 'drush:batchbook-client':
       return dt("Downloads the required Batchbook PHP API from github.com/batchblue. Include an optional path to the batchbook module installation, or if the module is not yet enabled.");
   }
 }
@@ -76,7 +76,7 @@ function batchbook_api_drush_batchbook_api() {
     $path = drupal_get_path('module', 'batchbook_api');
   }
   drush_op('chdir', $path);
-  if (drush_shell_exec('git clone git://github.com/batchblue/batchbook-php.git client')) {
+  if (drush_shell_exec('git clone git://github.com/batchblue/batchbook-php.git batchbook-client')) {
     drush_log(dt('Batchbook API has been downloaded to @path', array('@path' => $path)), 'success');
   }
   else {

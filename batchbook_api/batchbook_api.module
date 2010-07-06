@@ -9,7 +9,7 @@
 
 // Define directory paths for the Batchbook Client Service.
 define('BATCHBOOK_DIR', drupal_get_path('module', 'batchbook_api'));
-define('BATCHBOOK_DIR_CLIENT', BATCHBOOK_DIR .'/client/library/Batchblue/Service/Batchbook');
+define('BATCHBOOK_DIR_CLIENT', BATCHBOOK_DIR .'/batchbook-client/library/Batchblue/Service/Batchbook');
 
 // Define reporting levels for watchdog messages.
 define('BATCHBOOK_LOG_NONE', 0);
