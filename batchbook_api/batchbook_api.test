@@ -1,0 +1,65 @@
+<?php
+// $Id$
+/**
+ * @file
+ * Tests for batchbook_api.module
+ */
+
+class BatchBookAPITestCase extends DrupalWebTestCase {
+  /**
+   * Implementation of getInfo().
+   */
+  public static function getInfo() {
+    return array(
+      'name' => t('Batchbook API'),
+      'description' => ('Batchbook API functionality.'),
+      'group' => t('Batchbook'),
+    );
+  }
+
+  /**
+   * Implementation of setUp().
+   */
+  function setUp() {
+    parent::setUp('batchbook_api');
+
+    // Create and login user
+    $user = $this->drupalCreateUser(array('administer batchbook'));
+    $this->drupalLogin($user);
+  }
+
+  /**
+   * Implementation of tearDown(),
+   */
+  function tearDown() {
+    parent::tearDown();
+  }
+
+  /**
+   * Test page content type annotation
+   */
+  public function testBatchBookAPIPerson() {
+    $id         = 1;
+    $first_name = $this->randomName(8);
+    $last_name  = $this->randomName(8);
+    $title      = $this->randomName(12);
+    $company    = $this->randomName(12);
+    $notes      = $this->randomName(15);
+
+    $bb_person = batchbook_api_person($id);
+    $bb_person
+      ->setFirstName($first_name)
+      ->setLastName($last_name)
+      ->setTitle($title)
+      ->setCompany($company)
+      ->setNotes($notes)
+    ;
+
+    $this->assertEqual($bb_person->getId(), (integer) $id, 'ID matches');
+    $this->assertEqual($bb_person->getFirstName(), $first_name, 'First Name matches');
+    $this->assertEqual($bb_person->getLastName(), $last_name, 'Last Name matches');
+    $this->assertEqual($bb_person->getTitle(), $title, 'Title matches');
+    $this->assertEqual($bb_person->getCompany(), $company, 'Company matches');
+    $this->assertEqual($bb_person->getNotes(), $notes, 'Notes matches');
+  }
+}
