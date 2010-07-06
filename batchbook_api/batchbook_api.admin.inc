@@ -26,14 +26,14 @@ function batchbook_api_settings_form() {
   $form['api']['batchbook_api_account_name'] = array(
     '#type' => 'textfield',
     '#title' => t('Account name'),
-    '#description' => t('Your personalized Batchbook URL.'),
+    '#description' => t('Your personalized Batchbook account name. <em>accountname</em>.batchbook.com.'),
     '#default_value' => variable_get('batchbook_api_account_name', ''),
     '#required' => TRUE,
   );
   $form['api']['batchbook_api_token'] = array(
     '#type' => 'textfield',
-    '#title' => t('Security token'),
-    '#description' => t('Find your security token by...'),
+    '#title' => t('API Key'),
+    '#description' => t("Find your Batchbook API Key on the 'Your Account' page."),
     '#required' => TRUE,
     '#default_value' => variable_get('batchbook_api_token', ''),
   );
