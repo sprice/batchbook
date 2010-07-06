@@ -1,4 +1,4 @@
-$Id:$
+$Id: README.txt,v 1.1 2010/07/06 20:49:16 borismann Exp $
 
 Batchbook API [1] integration for Drupal 6.x
 
@@ -20,10 +20,17 @@ client. Once the Batchbook API module has been enabled run:
 
 2: http://drupal.org/project/drush
 
-Thanks
-------
+Thanks & Maintainers
+--------------------
 
 Much of the Batchbook API code has been modified from the Drupal Salesforce API
 module [3].
 
 3: http://drupal.org/project/salesforce
+
+Maintained by:
+* Shaw Price (langworthy - http://drupal.org/user/25556)
+* Boris Mann (http://drupal.org/user/4426)
+
+Sponsored by:
+* Affinity Bridge, http://affinitybridge.com
