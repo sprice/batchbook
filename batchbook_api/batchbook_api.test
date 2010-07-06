@@ -36,7 +36,7 @@ class BatchBookAPITestCase extends DrupalWebTestCase {
   }
 
   /**
-   * Test page content type annotation
+   * Test creation of a BatchBook Person object
    */
   public function testBatchBookAPIPerson() {
     $id         = 1;
