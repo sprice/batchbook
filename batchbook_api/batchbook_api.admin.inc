@@ -45,7 +45,7 @@ function batchbook_api_settings_form() {
   return system_settings_form($form);
 }
 
-/*
+
 function batchbook_api_demo() {
   // Attempt to create a Person Service object
   $bb_person_service = batchbook_api_person_service();
@@ -54,7 +54,6 @@ function batchbook_api_demo() {
     return t('Could not create a person service object.');
   }
 
-  $output = '';
+  $output = 'Cool beans';
   return $output;
 }
-*/

@@ -9,7 +9,7 @@
 
 // Define directory paths for the Batchbook Client Service.
 define('BATCHBOOK_DIR', drupal_get_path('module', 'batchbook_api'));
-define('BATCHBOOK_DIR_CLIENT', BATCHBOOK_DIR .'/batchbook-client/library/Batchblue/Service/Batchbook');
+define('BATCHBOOK_DIR_CLIENT', BATCHBOOK_DIR .'/batchbook-php/library/Batchblue/Service/Batchbook');
 
 // Define reporting levels for watchdog messages.
 define('BATCHBOOK_LOG_NONE', 0);
@@ -17,10 +17,17 @@ define('BATCHBOOK_LOG_SOME', 5);
 define('BATCHBOOK_LOG_ALL', 10);
 
 // Define Batchbook classes
+define('BATCHBOOK_CLASS_DEAL', BATCHBOOK_DIR_CLIENT . '/Deal.php');
+define('BATCHBOOK_CLASS_LOCATION', BATCHBOOK_DIR_CLIENT . '/Location.php');
 define('BATCHBOOK_CLASS_PERSON', BATCHBOOK_DIR_CLIENT . '/Person.php');
+define('BATCHBOOK_CLASS_SUPERTAG', BATCHBOOK_DIR_CLIENT . '/SuperTag.php');
+define('BATCHBOOK_CLASS_TAG', BATCHBOOK_DIR_CLIENT . '/Tag.php');
+define('BATCHBOOK_CLASS_TODO', BATCHBOOK_DIR_CLIENT . '/ToDo.php');
 
 // Define Batchbook services
+define('BATCHBOOK_SERVICE_DEAL', BATCHBOOK_DIR_CLIENT . '/DealService.php');
 define('BATCHBOOK_SERVICE_PERSON', BATCHBOOK_DIR_CLIENT . '/PersonService.php');
+define('BATCHBOOK_SERVICE_TODO', BATCHBOOK_DIR_CLIENT . '/ToDoService.php');
 
 // Define Drupal paths for various parts of the Batchbook UI.
 define('BATCHBOOK_PATH_ADMIN', 'admin/settings/batchbook');
@@ -43,15 +50,14 @@ function batchbook_api_menu() {
     'page callback' => 'drupal_get_form',
     'page arguments' => array('batchbook_api_settings_form'),
     'access arguments' => array('administer batchbook'),
-    'type' => MENU_NORMAL_ITEM,
+    'type' => MENU_LOCAL_TASK,
     'file' => 'batchbook_api.admin.inc',
   );
   $items[BATCHBOOK_PATH_ADMIN .'/settings'] = array(
     'title' => 'Settings',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'type' => MENU_LOCAL_TASK,
     'weight' => -10,
   );
-  /*
   $items[BATCHBOOK_PATH_DEMO] = array(
     'title' => 'Test/Demo',
     'page callback' => 'batchbook_api_demo',
@@ -59,7 +65,6 @@ function batchbook_api_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'batchbook_api.admin.inc',
   );
-  */
   return $items;
 }
 
@@ -74,15 +79,21 @@ function batchbook_api_person($id = NULL) {
 }
 
 function batchbook_api_person_service($account_name = NULL, $token = NULL) {
-  require_once(BATCHBOOK_SERVICE_PERSON);
+  if (zend_initialize('Zend_HTTP_Client')) {
+    require_once(BATCHBOOK_SERVICE_PERSON);
+    error_log(print_r(BATCHBOOK_SERVICE_PERSON,1),0);
+    $account_name = $account_name ? $account_name : variable_get('batchbook_api_account_name', '');
+    $token = $token ? $token : variable_get('batchbook_api_token', '');
 
-  $account_name = $account_name ? $account_name : variable_get('batchbook_api_account_name', '');
-  $token = $token ? $token : variable_get('batchbook_api_token', '');
-
-  $bb_person_service = new Batchblue_Service_BatchBook_PersonService($account_name, $token);
-  if (!is_object($bb_person_service)) {
-    watchdog(BATCHBOOK_LOG_SOME, 'Creation of Batchbook person service failed. Failed to create Batchblue_Service_BatchBook_PersonService object.', WATCHDOG_ERROR);
+    $bb_person_service = new Batchblue_Service_BatchBook_PersonService($account_name, $token);
+    if (!is_object($bb_person_service)) {
+      watchdog(BATCHBOOK_LOG_SOME, 'Creation of Batchbook person service failed. Failed to create Batchblue_Service_BatchBook_PersonService object.', WATCHDOG_ERROR);
+      return FALSE;
+    }
+    return $bb_person_service;
+  }
+  else {
+    drupal_set_message(t('Zend HTTP Client initialization failed.'));
     return FALSE;
   }
-  return $bb_person_service;
 }
